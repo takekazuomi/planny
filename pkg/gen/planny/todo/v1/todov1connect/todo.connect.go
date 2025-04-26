@@ -22,7 +22,7 @@ import (
 	connect "connectrpc.com/connect"
 	context "context"
 	errors "errors"
-	v1 "github.com/takekazu/planny/internal/gen/planny/todo/v1"
+	v1 "github.com/takekazu/planny/pkg/gen/planny/todo/v1"
 	http "net/http"
 	strings "strings"
 )

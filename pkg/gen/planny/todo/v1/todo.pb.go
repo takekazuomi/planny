@@ -801,8 +801,8 @@ const file_planny_todo_v1_todo_proto_rawDesc = "" +
 	"\tListTodos\x12 .planny.todo.v1.ListTodosRequest\x1a!.planny.todo.v1.ListTodosResponse\"\x00\x12U\n" +
 	"\n" +
 	"DeleteTodo\x12!.planny.todo.v1.DeleteTodoRequest\x1a\".planny.todo.v1.DeleteTodoResponse\"\x00\x12[\n" +
-	"\fUndeleteTodo\x12#.planny.todo.v1.UndeleteTodoRequest\x1a$.planny.todo.v1.UndeleteTodoResponse\"\x00B\xb8\x01\n" +
-	"\x12com.planny.todo.v1B\tTodoProtoP\x01Z=github.com/takekazu/planny/internal/gen/planny/todo/v1;todov1\xa2\x02\x03PTX\xaa\x02\x0ePlanny.Todo.V1\xca\x02\x0ePlanny\\Todo\\V1\xe2\x02\x1aPlanny\\Todo\\V1\\GPBMetadata\xea\x02\x10Planny::Todo::V1b\x06proto3"
+	"\fUndeleteTodo\x12#.planny.todo.v1.UndeleteTodoRequest\x1a$.planny.todo.v1.UndeleteTodoResponse\"\x00B\xb3\x01\n" +
+	"\x12com.planny.todo.v1B\tTodoProtoP\x01Z8github.com/takekazu/planny/pkg/gen/planny/todo/v1;todov1\xa2\x02\x03PTX\xaa\x02\x0ePlanny.Todo.V1\xca\x02\x0ePlanny\\Todo\\V1\xe2\x02\x1aPlanny\\Todo\\V1\\GPBMetadata\xea\x02\x10Planny::Todo::V1b\x06proto3"
 
 var (
 	file_planny_todo_v1_todo_proto_rawDescOnce sync.Once
