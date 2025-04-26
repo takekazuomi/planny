@@ -1,0 +1,74 @@
+version: "2"
+
+linters:
+  default: all
+
+  disable:
+    #- copyloopvar       # only valid for go v1.22 and above
+    #- cyclop            # covered by gocyclo
+    - depguard          # in golangci-lint v1.53.0+ default requires only stdlib deps
+    #- exportloopref     # deprecated in golangci v1.60.2
+    #- execinquery       # deprecated in golangci v1.58 
+    - funlen            # rely on code review to limit function length
+    - gocognit          # dubious "cognitive overhead" quantification
+    #- gofumpt           # prefer standard gofmt
+    ##- goimports         # rely on gci instead
+    ##- gomnd             # deprecated in golangci v1.58 in favor of mnd
+    - mnd               # some unnamed constants are okay
+    - intrange          # only valid for go v1.22 and above
+    - ireturn           # "accept interfaces, return structs" isn't ironclad
+    - lll               # don't want hard limits for line length
+    - maintidx          # covered by gocyclo
+    - nlreturn          # generous whitespace violates house style
+    - paralleltest      # in this project, it's not worth making all tests parallel
+    - testpackage       # internal tests are fine
+    - tparallel         # in this project, it's not worth making all tests parallel
+    - wrapcheck         # don't _always_ need to wrap errors
+    - wsl               # generous whitespace violates house style
+    #- gochecknoglobals  # 追加
+    #- revive            # 追加
+    #- exhaustruct       # 追加
+    #- testifylint       # 追加
+
+  settings:
+    errcheck:
+      check-type-assertions: true
+    exhaustruct:
+      include:
+        # No zero values for param structs.
+        - 'grpc-errors\..*[pP]arams'
+    forbidigo:
+      forbid:
+        # Unlike most Buf projects, we're allowing the standard library's log
+        # package: this is a demo service, so let's keep it simple.
+        - pattern: '^fmt\.Print'
+        - pattern: '^print$'
+        - pattern: '^println$'
+        - pattern: '^panic$'
+    godox:
+      # TODO, OPT, etc. comments are fine to commit. Use FIXME comments for
+      # temporary hacks, and use godox to prevent committing them.
+      keywords: [FIXME]
+
+  exclusions:
+    warn-unused: true
+    rules:
+      # It's much more convenient to keep eliza's matching and response data as
+      # globals rather than config.
+      - linters: [gochecknoglobals]
+        path: internal/eliza/globals.go
+      # Don't ban use of fmt.Errorf to create new errors, but the remaining
+      # checks from err113 are useful.
+      - path: '(.+)\.go$'
+        text: "do not define dynamic errors.*"        
+
+formatters:
+  # Enable specific formatter.
+  # Default: [] (uses standard Go formatting)
+  settings:
+    gci:
+      sections:
+        - standard # Standard section: captures all standard packages.
+        - default # Default section: contains all imports that could not be matched to another section type.
+        - prefix(grpc-errors) # Custom section: groups all imports with the specified Prefix.
+

@@ -1,0 +1,8 @@
+version: v1
+name: github.com/planny/todo
+lint:
+  use:
+    - STANDARD
+breaking:
+  use:
+    - FILE

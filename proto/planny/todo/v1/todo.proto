@@ -1,0 +1,127 @@
+// Copyright 2025 Takekazu Omi
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package planny.todo.v1;
+
+import "google/protobuf/timestamp.proto";
+
+// このファイルはTodoServiceと関連するメッセージを定義しています。
+// サービスはGoogle API Design Guideの原則に従います。
+// 各RPCメソッドは、Todoリソースを管理するためのCRUD操作に対応しています。
+
+service TodoService {
+  // CreateTodoメソッドは新しいTodoアイテムを作成します。
+  rpc CreateTodo(CreateTodoRequest) returns (CreateTodoResponse) {}
+
+  // GetTodoメソッドは指定されたリソース名のTodoアイテムを取得します。
+  rpc GetTodo(GetTodoRequest) returns (GetTodoResponse) {}
+
+  // UpdateTodoメソッドは既存のTodoアイテムを更新します。
+  rpc UpdateTodo(UpdateTodoRequest) returns (UpdateTodoResponse) {}
+
+  // ListTodosメソッドはTodoアイテムのリストを取得します。
+  rpc ListTodos(ListTodosRequest) returns (ListTodosResponse) {}
+
+  // DeleteTodoメソッドは指定されたリソース名のTodoアイテムを削除します。
+  rpc DeleteTodo(DeleteTodoRequest) returns (DeleteTodoResponse) {}
+
+  // UndeleteTodoメソッドは削除されたTodoアイテムを復元します。
+  rpc UndeleteTodo(UndeleteTodoRequest) returns (UndeleteTodoResponse) {}
+}
+
+message CreateTodoRequest {
+  // Todoアイテムのタイトル
+  string title = 1;
+  // Todoアイテムの詳細説明
+  string description = 2;
+}
+
+message CreateTodoResponse {
+  Todo todo = 1;
+}
+
+message GetTodoRequest {
+  // 取得するTodoアイテムのリソース名
+  string name = 1;
+}
+
+message GetTodoResponse {
+  Todo todo = 1;
+}
+
+message UpdateTodoRequest {
+  // 更新するTodoアイテムのリソース名
+  string name = 1;
+
+  // 更新後のタイトル
+  string title = 2;
+
+  // 更新後の詳細説明
+  string description = 3;
+}
+
+message UpdateTodoResponse {
+  Todo todo = 1;
+}
+
+message DeleteTodoRequest {
+  // 削除するTodoアイテムのリソース名
+  string name = 1;
+}
+
+message DeleteTodoResponse {
+  Todo todo = 1;
+}
+
+message UndeleteTodoRequest {
+  // 復元するTodoアイテムのリソース名
+  string name = 1;
+}
+
+message UndeleteTodoResponse {
+  Todo todo = 1;
+}
+
+message ListTodosRequest {
+  bool show_deleted = 1; // 削除されたTodoアイテムも表示するかどうか
+}
+
+message ListTodosResponse {
+  // Todoアイテムのリスト
+  repeated Todo todos = 1;
+}
+
+message Todo {
+  // Todoアイテムのリソース名
+  string name = 1;
+
+  // Todoアイテムのタイトル
+  string title = 2;
+  // Todoアイテムの詳細説明
+  string description = 3;
+
+  enum Status {
+    STATUS_UNSPECIFIED = 0;
+    STATUS_ACTIVE = 1; // やる予定
+    STATUS_COMPLETED = 2; // 完了
+    STATUS_REVOKED = 3; // 取り消し
+  }
+  Status status = 4;
+
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+  google.protobuf.Timestamp deleted_at = 7;
+}
