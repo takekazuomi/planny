@@ -1,0 +1,50 @@
+// Copyright 2025 Takekazu Omi
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//      http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+package planny.todo.v1;
+
+// https://buf.build/googleapis/googleapis/docs/main:google.rpc#google.rpc.Code
+import "google/rpc/code.proto";
+
+// SubCodeは、エラーのサブコード
+enum SubCode {
+  SUB_CODE_UNSPECIFIED = 0;
+  // 一日の最大タスクに達しました
+  SUB_CODE_MAX_TASK_REACHED = 1;
+}
+
+// MaxTaskReachedは、最大タスク数に達したことを示すエラー
+message MaxTaskReached {
+  // エラーコード
+  google.rpc.Code code = 1;
+
+  // サブコード
+  SubCode subcode = 2;
+
+  // エラーメッセージ
+  string message = 3;
+}
+
+// TodoServiceのエラーコード
+message TodoErrors {
+  // Todoアイテムのエラーコード
+  SubCode subcode = 1;
+
+  // エラーメッセージ
+  string message = 2;
+
+  string details = 3;
+}
