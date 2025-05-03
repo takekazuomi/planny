@@ -20,13 +20,14 @@ import (
 
 	"connectrpc.com/connect"
 	todov1 "github.com/takekazu/planny/pkg/gen/planny/todo/v1"
+	"github.com/takekazu/planny/pkg/todo/todostore"
 )
 
 // Handler はTodoアイテムのリストを取得します
 func Handler(
 	ctx context.Context,
+	store todostore.TodoStore,
 	req *connect.Request[todov1.ListTodosRequest],
-	todoData map[string]*todov1.Todo,
 ) (*connect.Response[todov1.ListTodosResponse], error) {
 	// 入力検証
 	if req.Msg == nil {
@@ -34,10 +35,16 @@ func Handler(
 	}
 
 	// 結果を格納するスライス
-	todos := make([]*todov1.Todo, 0, len(todoData))
+	todos := make([]*todov1.Todo, 0, 100)
 
 	// todoDataから条件に合うアイテムを抽出
-	for _, todo := range todoData {
+	todos, err := store.List(ctx)
+	if err != nil {
+		return nil, connect.NewError(connect.CodeInternal, fmt.Errorf("failed to list todos: %v", err))
+	}
+
+	// フィルタリング
+	for _, todo := range todos {
 		// 削除済みのアイテムの表示/非表示を制御
 		if todo.DeletedAt != nil && !req.Msg.ShowDeleted {
 			continue

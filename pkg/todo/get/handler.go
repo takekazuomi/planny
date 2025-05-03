@@ -20,13 +20,14 @@ import (
 
 	"connectrpc.com/connect"
 	todov1 "github.com/takekazu/planny/pkg/gen/planny/todo/v1"
+	"github.com/takekazu/planny/pkg/todo/todostore"
 )
 
 // Handler は指定されたリソース名のTodoアイテムを取得します
 func Handler(
 	ctx context.Context,
+	store todostore.TodoStore, // TodoStore型を使用
 	req *connect.Request[todov1.GetTodoRequest],
-	todoData map[string]*todov1.Todo,
 ) (*connect.Response[todov1.GetTodoResponse], error) {
 	// 入力検証
 	if req.Msg == nil {
@@ -34,8 +35,8 @@ func Handler(
 	}
 
 	// リソース名からTodoアイテムを取得
-	todo, ok := todoData[req.Msg.Name]
-	if !ok {
+	todo, err := store.Get(ctx, req.Msg.Name)
+	if err != nil {
 		return nil, connect.NewError(connect.CodeNotFound,
 			fmt.Errorf("todo with name %q not found", req.Msg.Name))
 	}

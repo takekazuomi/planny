@@ -21,14 +21,15 @@ import (
 
 	"connectrpc.com/connect"
 	todov1 "github.com/takekazu/planny/pkg/gen/planny/todo/v1"
+	"github.com/takekazu/planny/pkg/todo/todostore"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 // Handler は既存のTodoアイテムを更新します
 func Handler(
 	ctx context.Context,
+	store todostore.TodoStore,
 	req *connect.Request[todov1.UpdateTodoRequest],
-	todoData map[string]*todov1.Todo,
 ) (*connect.Response[todov1.UpdateTodoResponse], error) {
 	// 入力検証
 	if req.Msg == nil {
@@ -36,8 +37,8 @@ func Handler(
 	}
 
 	// リソース名からTodoアイテムを取得
-	todo, ok := todoData[req.Msg.Name]
-	if !ok {
+	todo, err := store.Get(ctx, req.Msg.Name)
+	if err != nil {
 		return nil, connect.NewError(connect.CodeNotFound,
 			fmt.Errorf("todo with name %q not found", req.Msg.Name))
 	}
@@ -49,6 +50,7 @@ func Handler(
 	}
 
 	// フィールドを更新
+	// TODO: パーシャルアップデート
 	todo.Title = req.Msg.Title
 	todo.Description = req.Msg.Description
 	todo.UpdatedAt = timestamppb.New(time.Now())

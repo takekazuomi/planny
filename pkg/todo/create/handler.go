@@ -17,36 +17,39 @@ package create
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"connectrpc.com/connect"
 	"google.golang.org/protobuf/types/known/timestamppb"
 
+	"github.com/oklog/ulid/v2"
 	todov1 "github.com/takekazu/planny/pkg/gen/planny/todo/v1"
+	"github.com/takekazu/planny/pkg/todo/todostore"
 )
 
 // Handler は新しいTodoアイテムを作成します
 func Handler(
 	ctx context.Context,
+	//store store.KeyValueStore[string, *todov1.Todo],
+	store todostore.TodoStore,
 	req *connect.Request[todov1.CreateTodoRequest],
-	todoData map[string]*todov1.Todo,
 ) (*connect.Response[todov1.CreateTodoResponse], error) {
-	// 入力検証
-	if req.Msg == nil {
-		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("request message is nil"))
-	}
-
 	// タイムスタンプの作成
 	now := time.Now()
 	nowProto := timestamppb.New(now)
+
 	// 30日後
 	dueDate := timestamppb.New(now.Add(30 * 24 * time.Hour))
 
+	// Todo リソース名の生成
+	name := fmt.Sprintf("todos/%s", strings.ToLower(ulid.Make().String()))
+
 	// 新しいTodoアイテムの作成
 	todo := &todov1.Todo{
-		Name:        fmt.Sprintf("todos/%d", len(todoData)+1),
-		Title:       req.Msg.Title,
-		Description: req.Msg.Description,
+		Name:        name,
+		Title:       req.Msg.GetTitle(),
+		Description: req.Msg.GetDescription(),
 		Status:      todov1.TodoStatus_TODO_STATUS_ACTIVE,
 		Priority:    0,
 		DueDate:     dueDate,
@@ -54,8 +57,8 @@ func Handler(
 		UpdatedAt:   nowProto,
 	}
 
-	// グローバルなデータストアに追加
-	todoData[todo.Name] = todo
+	// データストアに追加
+	store.Set(ctx, todo.Name, todo)
 
 	// レスポンスの作成
 	return connect.NewResponse(&todov1.CreateTodoResponse{

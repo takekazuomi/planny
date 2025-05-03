@@ -116,6 +116,7 @@
         "testifylint",
         "testpackage",
         "thelper",
+        "todostore",
         "todov",
         "tparallel",
         "unconvert",
