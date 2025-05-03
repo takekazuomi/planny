@@ -27,6 +27,7 @@
         "errcheck",
         "errchkjson",
         "errname",
+        "Errorf",
         "errorlint",
         "execinquery",
         "exhaustruct",

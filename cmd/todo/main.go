@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package main is the demo server for the Eliza chatbot. It implements the
+// Package main implements the gRPC server for the Todo service.
 package main
 
 import (
@@ -35,6 +35,8 @@ import (
 )
 
 func main() {
+
+	ctx := context.Background()
 
 	mux := http.NewServeMux()
 	mux.Handle(todov1connect.NewTodoServiceHandler(
@@ -65,6 +67,7 @@ func main() {
 		WriteTimeout:      5 * time.Minute,
 		MaxHeaderBytes:    8 * 1024, // 8KiB
 	}
+
 	signals := make(chan os.Signal, 1)
 	signal.Notify(signals, os.Interrupt, syscall.SIGTERM)
 	go func() {
@@ -74,7 +77,8 @@ func main() {
 	}()
 
 	<-signals
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+
+	ctx, cancel := context.WithTimeout(ctx, time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
 		log.Fatalf("HTTP shutdown: %v", err) //nolint:gocritic

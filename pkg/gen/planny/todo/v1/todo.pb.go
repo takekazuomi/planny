@@ -36,56 +36,59 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type Todo_Status int32
+type TodoStatus int32
 
 const (
-	Todo_STATUS_UNSPECIFIED Todo_Status = 0
-	Todo_STATUS_ACTIVE      Todo_Status = 1 // やる予定
-	Todo_STATUS_COMPLETED   Todo_Status = 2 // 完了
-	Todo_STATUS_REVOKED     Todo_Status = 3 // 取り消し
+	TodoStatus_TODO_STATUS_UNSPECIFIED TodoStatus = 0
+	TodoStatus_TODO_STATUS_ACTIVE      TodoStatus = 1 // やる予定
+	TodoStatus_TODO_STATUS_COMPLETED   TodoStatus = 2 // 完了
+	TodoStatus_TODO_STATUS_REVOKED     TodoStatus = 3 // 取り消し
+	TodoStatus_TODO_STATUS_ARCHIVED    TodoStatus = 4 // アーカイブ
 )
 
-// Enum value maps for Todo_Status.
+// Enum value maps for TodoStatus.
 var (
-	Todo_Status_name = map[int32]string{
-		0: "STATUS_UNSPECIFIED",
-		1: "STATUS_ACTIVE",
-		2: "STATUS_COMPLETED",
-		3: "STATUS_REVOKED",
+	TodoStatus_name = map[int32]string{
+		0: "TODO_STATUS_UNSPECIFIED",
+		1: "TODO_STATUS_ACTIVE",
+		2: "TODO_STATUS_COMPLETED",
+		3: "TODO_STATUS_REVOKED",
+		4: "TODO_STATUS_ARCHIVED",
 	}
-	Todo_Status_value = map[string]int32{
-		"STATUS_UNSPECIFIED": 0,
-		"STATUS_ACTIVE":      1,
-		"STATUS_COMPLETED":   2,
-		"STATUS_REVOKED":     3,
+	TodoStatus_value = map[string]int32{
+		"TODO_STATUS_UNSPECIFIED": 0,
+		"TODO_STATUS_ACTIVE":      1,
+		"TODO_STATUS_COMPLETED":   2,
+		"TODO_STATUS_REVOKED":     3,
+		"TODO_STATUS_ARCHIVED":    4,
 	}
 )
 
-func (x Todo_Status) Enum() *Todo_Status {
-	p := new(Todo_Status)
+func (x TodoStatus) Enum() *TodoStatus {
+	p := new(TodoStatus)
 	*p = x
 	return p
 }
 
-func (x Todo_Status) String() string {
+func (x TodoStatus) String() string {
 	return protoimpl.X.EnumStringOf(x.Descriptor(), protoreflect.EnumNumber(x))
 }
 
-func (Todo_Status) Descriptor() protoreflect.EnumDescriptor {
+func (TodoStatus) Descriptor() protoreflect.EnumDescriptor {
 	return file_planny_todo_v1_todo_proto_enumTypes[0].Descriptor()
 }
 
-func (Todo_Status) Type() protoreflect.EnumType {
+func (TodoStatus) Type() protoreflect.EnumType {
 	return &file_planny_todo_v1_todo_proto_enumTypes[0]
 }
 
-func (x Todo_Status) Number() protoreflect.EnumNumber {
+func (x TodoStatus) Number() protoreflect.EnumNumber {
 	return protoreflect.EnumNumber(x)
 }
 
-// Deprecated: Use Todo_Status.Descriptor instead.
-func (Todo_Status) EnumDescriptor() ([]byte, []int) {
-	return file_planny_todo_v1_todo_proto_rawDescGZIP(), []int{12, 0}
+// Deprecated: Use TodoStatus.Descriptor instead.
+func (TodoStatus) EnumDescriptor() ([]byte, []int) {
+	return file_planny_todo_v1_todo_proto_rawDescGZIP(), []int{0}
 }
 
 type CreateTodoRequest struct {
@@ -656,11 +659,14 @@ type Todo struct {
 	// Todoアイテムのタイトル
 	Title string `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
 	// Todoアイテムの詳細説明
-	Description   string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	Status        Todo_Status            `protobuf:"varint,4,opt,name=status,proto3,enum=planny.todo.v1.Todo_Status" json:"status,omitempty"`
-	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
-	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
-	DeletedAt     *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty"`
+	Description string `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	Priority    int32  `protobuf:"varint,4,opt,name=priority,proto3" json:"priority,omitempty"`
+	// 予定日
+	DueDate       *timestamppb.Timestamp `protobuf:"bytes,5,opt,name=due_date,json=dueDate,proto3" json:"due_date,omitempty"`
+	Status        TodoStatus             `protobuf:"varint,6,opt,name=status,proto3,enum=planny.todo.v1.TodoStatus" json:"status,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,8,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	DeletedAt     *timestamppb.Timestamp `protobuf:"bytes,9,opt,name=deleted_at,json=deletedAt,proto3" json:"deleted_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -716,11 +722,25 @@ func (x *Todo) GetDescription() string {
 	return ""
 }
 
-func (x *Todo) GetStatus() Todo_Status {
+func (x *Todo) GetPriority() int32 {
+	if x != nil {
+		return x.Priority
+	}
+	return 0
+}
+
+func (x *Todo) GetDueDate() *timestamppb.Timestamp {
+	if x != nil {
+		return x.DueDate
+	}
+	return nil
+}
+
+func (x *Todo) GetStatus() TodoStatus {
 	if x != nil {
 		return x.Status
 	}
-	return Todo_STATUS_UNSPECIFIED
+	return TodoStatus_TODO_STATUS_UNSPECIFIED
 }
 
 func (x *Todo) GetCreatedAt() *timestamppb.Timestamp {
@@ -775,23 +795,27 @@ const file_planny_todo_v1_todo_proto_rawDesc = "" +
 	"\x10ListTodosRequest\x12!\n" +
 	"\fshow_deleted\x18\x01 \x01(\bR\vshowDeleted\"?\n" +
 	"\x11ListTodosResponse\x12*\n" +
-	"\x05todos\x18\x01 \x03(\v2\x14.planny.todo.v1.TodoR\x05todos\"\x97\x03\n" +
+	"\x05todos\x18\x01 \x03(\v2\x14.planny.todo.v1.TodoR\x05todos\"\x8a\x03\n" +
 	"\x04Todo\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12\x14\n" +
 	"\x05title\x18\x02 \x01(\tR\x05title\x12 \n" +
-	"\vdescription\x18\x03 \x01(\tR\vdescription\x123\n" +
-	"\x06status\x18\x04 \x01(\x0e2\x1b.planny.todo.v1.Todo.StatusR\x06status\x129\n" +
+	"\vdescription\x18\x03 \x01(\tR\vdescription\x12\x1a\n" +
+	"\bpriority\x18\x04 \x01(\x05R\bpriority\x125\n" +
+	"\bdue_date\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\adueDate\x122\n" +
+	"\x06status\x18\x06 \x01(\x0e2\x1a.planny.todo.v1.TodoStatusR\x06status\x129\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"created_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
 	"\n" +
-	"updated_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x129\n" +
+	"updated_at\x18\b \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\x129\n" +
 	"\n" +
-	"deleted_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tdeletedAt\"]\n" +
-	"\x06Status\x12\x16\n" +
-	"\x12STATUS_UNSPECIFIED\x10\x00\x12\x11\n" +
-	"\rSTATUS_ACTIVE\x10\x01\x12\x14\n" +
-	"\x10STATUS_COMPLETED\x10\x02\x12\x12\n" +
-	"\x0eSTATUS_REVOKED\x10\x032\x91\x04\n" +
+	"deleted_at\x18\t \x01(\v2\x1a.google.protobuf.TimestampR\tdeletedAt*\x8f\x01\n" +
+	"\n" +
+	"TodoStatus\x12\x1b\n" +
+	"\x17TODO_STATUS_UNSPECIFIED\x10\x00\x12\x16\n" +
+	"\x12TODO_STATUS_ACTIVE\x10\x01\x12\x19\n" +
+	"\x15TODO_STATUS_COMPLETED\x10\x02\x12\x17\n" +
+	"\x13TODO_STATUS_REVOKED\x10\x03\x12\x18\n" +
+	"\x14TODO_STATUS_ARCHIVED\x10\x042\x91\x04\n" +
 	"\vTodoService\x12U\n" +
 	"\n" +
 	"CreateTodo\x12!.planny.todo.v1.CreateTodoRequest\x1a\".planny.todo.v1.CreateTodoResponse\"\x00\x12L\n" +
@@ -819,7 +843,7 @@ func file_planny_todo_v1_todo_proto_rawDescGZIP() []byte {
 var file_planny_todo_v1_todo_proto_enumTypes = make([]protoimpl.EnumInfo, 1)
 var file_planny_todo_v1_todo_proto_msgTypes = make([]protoimpl.MessageInfo, 13)
 var file_planny_todo_v1_todo_proto_goTypes = []any{
-	(Todo_Status)(0),              // 0: planny.todo.v1.Todo.Status
+	(TodoStatus)(0),               // 0: planny.todo.v1.TodoStatus
 	(*CreateTodoRequest)(nil),     // 1: planny.todo.v1.CreateTodoRequest
 	(*CreateTodoResponse)(nil),    // 2: planny.todo.v1.CreateTodoResponse
 	(*GetTodoRequest)(nil),        // 3: planny.todo.v1.GetTodoRequest
@@ -842,27 +866,28 @@ var file_planny_todo_v1_todo_proto_depIdxs = []int32{
 	13, // 3: planny.todo.v1.DeleteTodoResponse.todo:type_name -> planny.todo.v1.Todo
 	13, // 4: planny.todo.v1.UndeleteTodoResponse.todo:type_name -> planny.todo.v1.Todo
 	13, // 5: planny.todo.v1.ListTodosResponse.todos:type_name -> planny.todo.v1.Todo
-	0,  // 6: planny.todo.v1.Todo.status:type_name -> planny.todo.v1.Todo.Status
-	14, // 7: planny.todo.v1.Todo.created_at:type_name -> google.protobuf.Timestamp
-	14, // 8: planny.todo.v1.Todo.updated_at:type_name -> google.protobuf.Timestamp
-	14, // 9: planny.todo.v1.Todo.deleted_at:type_name -> google.protobuf.Timestamp
-	1,  // 10: planny.todo.v1.TodoService.CreateTodo:input_type -> planny.todo.v1.CreateTodoRequest
-	3,  // 11: planny.todo.v1.TodoService.GetTodo:input_type -> planny.todo.v1.GetTodoRequest
-	5,  // 12: planny.todo.v1.TodoService.UpdateTodo:input_type -> planny.todo.v1.UpdateTodoRequest
-	11, // 13: planny.todo.v1.TodoService.ListTodos:input_type -> planny.todo.v1.ListTodosRequest
-	7,  // 14: planny.todo.v1.TodoService.DeleteTodo:input_type -> planny.todo.v1.DeleteTodoRequest
-	9,  // 15: planny.todo.v1.TodoService.UndeleteTodo:input_type -> planny.todo.v1.UndeleteTodoRequest
-	2,  // 16: planny.todo.v1.TodoService.CreateTodo:output_type -> planny.todo.v1.CreateTodoResponse
-	4,  // 17: planny.todo.v1.TodoService.GetTodo:output_type -> planny.todo.v1.GetTodoResponse
-	6,  // 18: planny.todo.v1.TodoService.UpdateTodo:output_type -> planny.todo.v1.UpdateTodoResponse
-	12, // 19: planny.todo.v1.TodoService.ListTodos:output_type -> planny.todo.v1.ListTodosResponse
-	8,  // 20: planny.todo.v1.TodoService.DeleteTodo:output_type -> planny.todo.v1.DeleteTodoResponse
-	10, // 21: planny.todo.v1.TodoService.UndeleteTodo:output_type -> planny.todo.v1.UndeleteTodoResponse
-	16, // [16:22] is the sub-list for method output_type
-	10, // [10:16] is the sub-list for method input_type
-	10, // [10:10] is the sub-list for extension type_name
-	10, // [10:10] is the sub-list for extension extendee
-	0,  // [0:10] is the sub-list for field type_name
+	14, // 6: planny.todo.v1.Todo.due_date:type_name -> google.protobuf.Timestamp
+	0,  // 7: planny.todo.v1.Todo.status:type_name -> planny.todo.v1.TodoStatus
+	14, // 8: planny.todo.v1.Todo.created_at:type_name -> google.protobuf.Timestamp
+	14, // 9: planny.todo.v1.Todo.updated_at:type_name -> google.protobuf.Timestamp
+	14, // 10: planny.todo.v1.Todo.deleted_at:type_name -> google.protobuf.Timestamp
+	1,  // 11: planny.todo.v1.TodoService.CreateTodo:input_type -> planny.todo.v1.CreateTodoRequest
+	3,  // 12: planny.todo.v1.TodoService.GetTodo:input_type -> planny.todo.v1.GetTodoRequest
+	5,  // 13: planny.todo.v1.TodoService.UpdateTodo:input_type -> planny.todo.v1.UpdateTodoRequest
+	11, // 14: planny.todo.v1.TodoService.ListTodos:input_type -> planny.todo.v1.ListTodosRequest
+	7,  // 15: planny.todo.v1.TodoService.DeleteTodo:input_type -> planny.todo.v1.DeleteTodoRequest
+	9,  // 16: planny.todo.v1.TodoService.UndeleteTodo:input_type -> planny.todo.v1.UndeleteTodoRequest
+	2,  // 17: planny.todo.v1.TodoService.CreateTodo:output_type -> planny.todo.v1.CreateTodoResponse
+	4,  // 18: planny.todo.v1.TodoService.GetTodo:output_type -> planny.todo.v1.GetTodoResponse
+	6,  // 19: planny.todo.v1.TodoService.UpdateTodo:output_type -> planny.todo.v1.UpdateTodoResponse
+	12, // 20: planny.todo.v1.TodoService.ListTodos:output_type -> planny.todo.v1.ListTodosResponse
+	8,  // 21: planny.todo.v1.TodoService.DeleteTodo:output_type -> planny.todo.v1.DeleteTodoResponse
+	10, // 22: planny.todo.v1.TodoService.UndeleteTodo:output_type -> planny.todo.v1.UndeleteTodoResponse
+	17, // [17:23] is the sub-list for method output_type
+	11, // [11:17] is the sub-list for method input_type
+	11, // [11:11] is the sub-list for extension type_name
+	11, // [11:11] is the sub-list for extension extendee
+	0,  // [0:11] is the sub-list for field type_name
 }
 
 func init() { file_planny_todo_v1_todo_proto_init() }

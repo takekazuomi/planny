@@ -113,15 +113,22 @@ message Todo {
   // Todoアイテムの詳細説明
   string description = 3;
 
-  enum Status {
-    STATUS_UNSPECIFIED = 0;
-    STATUS_ACTIVE = 1; // やる予定
-    STATUS_COMPLETED = 2; // 完了
-    STATUS_REVOKED = 3; // 取り消し
-  }
-  Status status = 4;
+  int32 priority = 4;
 
-  google.protobuf.Timestamp created_at = 5;
-  google.protobuf.Timestamp updated_at = 6;
-  google.protobuf.Timestamp deleted_at = 7;
+  // 予定日
+  google.protobuf.Timestamp due_date = 5;
+
+  TodoStatus status = 6;
+
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+  google.protobuf.Timestamp deleted_at = 9;
+}
+
+enum TodoStatus {
+  TODO_STATUS_UNSPECIFIED = 0;
+  TODO_STATUS_ACTIVE = 1; // やる予定
+  TODO_STATUS_COMPLETED = 2; // 完了
+  TODO_STATUS_REVOKED = 3; // 取り消し
+  TODO_STATUS_ARCHIVED = 4; // アーカイブ
 }
