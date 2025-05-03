@@ -20,13 +20,13 @@ import (
 
 	"connectrpc.com/connect"
 	todov1 "github.com/takekazu/planny/pkg/gen/planny/todo/v1"
-	"github.com/takekazu/planny/pkg/todo/todostore"
+	"github.com/takekazu/planny/pkg/todo/store"
 )
 
 // Handler はTodoアイテムのリストを取得します
 func Handler(
 	ctx context.Context,
-	store todostore.TodoStore,
+	store store.TodoStore,
 	req *connect.Request[todov1.ListTodosRequest],
 ) (*connect.Response[todov1.ListTodosResponse], error) {
 	// 入力検証

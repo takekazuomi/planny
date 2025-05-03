@@ -25,14 +25,14 @@ import (
 
 	"github.com/oklog/ulid/v2"
 	todov1 "github.com/takekazu/planny/pkg/gen/planny/todo/v1"
-	"github.com/takekazu/planny/pkg/todo/todostore"
+	"github.com/takekazu/planny/pkg/todo/store"
 )
 
 // Handler は新しいTodoアイテムを作成します
 func Handler(
 	ctx context.Context,
 	//store store.KeyValueStore[string, *todov1.Todo],
-	store todostore.TodoStore,
+	store store.TodoStore,
 	req *connect.Request[todov1.CreateTodoRequest],
 ) (*connect.Response[todov1.CreateTodoResponse], error) {
 	// タイムスタンプの作成

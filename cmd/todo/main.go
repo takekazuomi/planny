@@ -29,7 +29,7 @@ import (
 	"connectrpc.com/grpcreflect"
 
 	"github.com/takekazu/planny/pkg/gen/planny/todo/v1/todov1connect"
-	"github.com/takekazu/planny/pkg/todo"
+	"github.com/takekazu/planny/pkg/todo/server"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 )
@@ -40,7 +40,7 @@ func main() {
 
 	mux := http.NewServeMux()
 	mux.Handle(todov1connect.NewTodoServiceHandler(
-		todo.NewTodoServer(),
+		server.NewTodoServer(),
 	))
 	mux.Handle(grpchealth.NewHandler(
 		grpchealth.NewStaticChecker(todov1connect.TodoServiceName),

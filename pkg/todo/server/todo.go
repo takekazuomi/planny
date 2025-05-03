@@ -14,7 +14,7 @@
 
 // Package todo はTodoサービスを実装するパッケージです。
 // TodoServiceHandlerインターフェースを実装し、Todoアイテムの管理機能を提供します。
-package todo
+package server
 
 import (
 	"context"
@@ -22,18 +22,17 @@ import (
 	"connectrpc.com/connect"
 	todov1 "github.com/takekazu/planny/pkg/gen/planny/todo/v1"
 	"github.com/takekazu/planny/pkg/gen/planny/todo/v1/todov1connect"
-	"github.com/takekazu/planny/pkg/store"
-	"github.com/takekazu/planny/pkg/todo/create"
-	"github.com/takekazu/planny/pkg/todo/delete"
-	"github.com/takekazu/planny/pkg/todo/get"
-	"github.com/takekazu/planny/pkg/todo/list"
-	"github.com/takekazu/planny/pkg/todo/todostore"
-	"github.com/takekazu/planny/pkg/todo/undelete"
-	"github.com/takekazu/planny/pkg/todo/update"
+	"github.com/takekazu/planny/pkg/todo/handler/create"
+	"github.com/takekazu/planny/pkg/todo/handler/delete"
+	"github.com/takekazu/planny/pkg/todo/handler/get"
+	"github.com/takekazu/planny/pkg/todo/handler/list"
+	"github.com/takekazu/planny/pkg/todo/handler/undelete"
+	"github.com/takekazu/planny/pkg/todo/handler/update"
+	"github.com/takekazu/planny/pkg/todo/store"
 )
 
 type todoServer struct {
-	Store todostore.TodoStore
+	Store store.TodoStore
 }
 
 var _ todov1connect.TodoServiceHandler = &todoServer{}
@@ -43,16 +42,16 @@ var _ todov1connect.TodoServiceHandler = &todoServer{}
 // ConnectフレームワークでTodoサービスを使用するためのエントリーポイントとして使用される。
 func NewTodoServer() todov1connect.TodoServiceHandler {
 	return &todoServer{
-		Store: store.NewTodoKeyValueStore(),
+		Store: store.New(),
 	}
 }
 
 // ハンドラー関数の型を定義
-type handlerFunc[Req any, Resp any] func(context.Context, todostore.TodoStore, *connect.Request[Req]) (*connect.Response[Resp], error)
+type handlerFunc[Req any, Resp any] func(context.Context, store.TodoStore, *connect.Request[Req]) (*connect.Response[Resp], error)
 
 // 汎用的なハンドラー呼び出し関数
 func callHandler[Req any, Resp any](
-	ctx context.Context, store todostore.TodoStore, req *connect.Request[Req], handler handlerFunc[Req, Resp],
+	ctx context.Context, store store.TodoStore, req *connect.Request[Req], handler handlerFunc[Req, Resp],
 ) (*connect.Response[Resp], error) {
 	return handler(ctx, store, req)
 }

@@ -12,23 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package get
+package undelete
 
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"connectrpc.com/connect"
 	todov1 "github.com/takekazu/planny/pkg/gen/planny/todo/v1"
-	"github.com/takekazu/planny/pkg/todo/todostore"
+	"github.com/takekazu/planny/pkg/todo/store"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// Handler は指定されたリソース名のTodoアイテムを取得します
+// Handler は削除されたTodoアイテムを復元します
 func Handler(
 	ctx context.Context,
-	store todostore.TodoStore, // TodoStore型を使用
-	req *connect.Request[todov1.GetTodoRequest],
-) (*connect.Response[todov1.GetTodoResponse], error) {
+	store store.TodoStore,
+	req *connect.Request[todov1.UndeleteTodoRequest],
+) (*connect.Response[todov1.UndeleteTodoResponse], error) {
 	// 入力検証
 	if req.Msg == nil {
 		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("request message is nil"))
@@ -41,8 +43,19 @@ func Handler(
 			fmt.Errorf("todo with name %q not found", req.Msg.Name))
 	}
 
+	// 削除されていない場合はエラー
+	if todo.DeletedAt == nil {
+		return nil, connect.NewError(connect.CodeFailedPrecondition,
+			fmt.Errorf("todo %q is not deleted", req.Msg.Name))
+	}
+
+	// 削除フラグをクリア
+	todo.DeletedAt = nil
+	todo.Status = todov1.TodoStatus_TODO_STATUS_ACTIVE
+	todo.UpdatedAt = timestamppb.New(time.Now())
+
 	// レスポンスの作成
-	return connect.NewResponse(&todov1.GetTodoResponse{
+	return connect.NewResponse(&todov1.UndeleteTodoResponse{
 		Todo: todo,
 	}), nil
 }

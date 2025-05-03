@@ -21,14 +21,14 @@ import (
 
 	"connectrpc.com/connect"
 	todov1 "github.com/takekazu/planny/pkg/gen/planny/todo/v1"
-	"github.com/takekazu/planny/pkg/todo/todostore"
+	"github.com/takekazu/planny/pkg/todo/store"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 // Handler は指定されたリソース名のTodoアイテムを削除します
 func Handler(
 	ctx context.Context,
-	store todostore.TodoStore,
+	store store.TodoStore,
 	req *connect.Request[todov1.DeleteTodoRequest],
 ) (*connect.Response[todov1.DeleteTodoResponse], error) {
 	// 入力検証

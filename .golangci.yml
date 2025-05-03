@@ -55,8 +55,8 @@ linters:
     rules:
       # It's much more convenient to keep eliza's matching and response data as
       # globals rather than config.
-      - linters: [gochecknoglobals]
-        path: internal/eliza/globals.go
+      #- linters: [gochecknoglobals]
+      #  path: internal/eliza/globals.go
       # Don't ban use of fmt.Errorf to create new errors, but the remaining
       # checks from err113 are useful.
       - path: '(.+)\.go$'

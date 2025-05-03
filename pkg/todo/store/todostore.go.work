@@ -8,26 +8,11 @@ import (
 
 	"github.com/google/uuid"
 	todov1 "github.com/takekazu/planny/pkg/gen/planny/todo/v1"
+	"github.com/takekazu/planny/pkg/x/store"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// KeyValueStore は汎用的なKey-Valueデータストアのインターフェースを定義します
-type KeyValueStore[K comparable, V any] interface {
-	// Get はキーに対応する値を取得します
-	Get(ctx context.Context, key K) (V, error)
-
-	// Set はキーに対して値を設定します
-	Set(ctx context.Context, key K, value V) error
-
-	// Delete はキーと対応する値を削除します
-	Delete(ctx context.Context, key K) error
-
-	// List は全ての値を取得します
-	List(ctx context.Context) ([]V, error)
-
-	// Has はキーが存在するか確認します
-	Has(ctx context.Context, key K) bool
-}
+type TodoStore = store.KeyValueStore[string, *todov1.Todo]
 
 // TodoKeyValueStore は Todo アイテムに特化したKey-Valueストアを実装します
 type TodoKeyValueStore struct {
