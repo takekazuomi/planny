@@ -21,17 +21,15 @@ import (
 	"time"
 
 	"connectrpc.com/connect"
-	"google.golang.org/protobuf/types/known/timestamppb"
-
 	"github.com/oklog/ulid/v2"
 	todov1 "github.com/takekazu/planny/pkg/gen/planny/todo/v1"
-	"github.com/takekazu/planny/pkg/todo/store"
+	"github.com/takekazu/planny/pkg/store"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// Handler は新しいTodoアイテムを作成します
+// Handler は新しいTodoアイテムを作成します。
 func Handler(
 	ctx context.Context,
-	//store store.KeyValueStore[string, *todov1.Todo],
 	store store.TodoStore,
 	req *connect.Request[todov1.CreateTodoRequest],
 ) (*connect.Response[todov1.CreateTodoResponse], error) {
@@ -43,7 +41,7 @@ func Handler(
 	dueDate := timestamppb.New(now.Add(30 * 24 * time.Hour))
 
 	// Todo リソース名の生成
-	name := fmt.Sprintf("todos/%s", strings.ToLower(ulid.Make().String()))
+	name := "todos/" + strings.ToLower(ulid.Make().String())
 
 	// 新しいTodoアイテムの作成
 	todo := &todov1.Todo{
@@ -58,7 +56,11 @@ func Handler(
 	}
 
 	// データストアに追加
-	store.Set(ctx, todo.Name, todo)
+	err := store.Set(ctx, name, todo)
+	if err != nil {
+		return nil, connect.NewError(connect.CodeInternal,
+			fmt.Errorf("failed to create todo: %w", err))
+	}
 
 	// レスポンスの作成
 	return connect.NewResponse(&todov1.CreateTodoResponse{

@@ -12,28 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package update
+package undelete
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"time"
 
 	"connectrpc.com/connect"
 	todov1 "github.com/takekazu/planny/pkg/gen/planny/todo/v1"
-	"github.com/takekazu/planny/pkg/todo/store"
+	"github.com/takekazu/planny/pkg/store"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// Handler は既存のTodoアイテムを更新します
+// Handler は削除されたTodoアイテムを復元します。
 func Handler(
 	ctx context.Context,
 	store store.TodoStore,
-	req *connect.Request[todov1.UpdateTodoRequest],
-) (*connect.Response[todov1.UpdateTodoResponse], error) {
+	req *connect.Request[todov1.UndeleteTodoRequest],
+) (*connect.Response[todov1.UndeleteTodoResponse], error) {
 	// 入力検証
 	if req.Msg == nil {
-		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("request message is nil"))
+		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("request message is nil"))
 	}
 
 	// リソース名からTodoアイテムを取得
@@ -43,20 +44,19 @@ func Handler(
 			fmt.Errorf("todo with name %q not found", req.Msg.Name))
 	}
 
-	// 削除されたアイテムは更新できない
-	if todo.DeletedAt != nil {
+	// 削除されていない場合はエラー
+	if todo.DeletedAt == nil {
 		return nil, connect.NewError(connect.CodeFailedPrecondition,
-			fmt.Errorf("cannot update deleted todo %q", req.Msg.Name))
+			fmt.Errorf("todo %q is not deleted", req.Msg.Name))
 	}
 
-	// フィールドを更新
-	// TODO: パーシャルアップデート
-	todo.Title = req.Msg.Title
-	todo.Description = req.Msg.Description
+	// 削除フラグをクリア
+	todo.DeletedAt = nil
+	todo.Status = todov1.TodoStatus_TODO_STATUS_ACTIVE
 	todo.UpdatedAt = timestamppb.New(time.Now())
 
 	// レスポンスの作成
-	return connect.NewResponse(&todov1.UpdateTodoResponse{
+	return connect.NewResponse(&todov1.UndeleteTodoResponse{
 		Todo: todo,
 	}), nil
 }

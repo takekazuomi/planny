@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package: mapstore は、KeyValueStore のin-memory generic map実装
+// Package: mapstore は、KeyValueStore のin-memory generic map実装。
 package mapstore
 
 import (
@@ -23,26 +23,26 @@ import (
 	"github.com/takekazu/planny/pkg/x/store"
 )
 
-// MapStore はKeyValueStoreインターフェースを実装する、メモリ内のmapベースストア
+// MapStore はKeyValueStoreインターフェースを実装する、メモリ内のmapベースストア。
 type MapStore[K comparable, V any] struct {
 	data map[K]V
 	mu   sync.RWMutex
 }
 
-// MapStoreはKeyValueStoreインターフェースを実装
+// MapStoreはKeyValueStoreインターフェースを実装。
 var _ store.Store[string, any] = (*MapStore[string, any])(nil)
 
-// initialCapacity は固定
+// initialCapacity は固定。
 const initialCapacity = 1000
 
-// New は新しいMapStoreインスタンスの作成
+// New は新しいMapStoreインスタンスの作成。
 func New[K comparable, V any]() *MapStore[K, V] {
 	return &MapStore[K, V]{
 		data: make(map[K]V, initialCapacity),
 	}
 }
 
-// Get はキーに対応する値の取得
+// Get はキーに対応する値の取得。
 func (s *MapStore[K, V]) Get(ctx context.Context, key K) (V, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
@@ -56,7 +56,7 @@ func (s *MapStore[K, V]) Get(ctx context.Context, key K) (V, error) {
 	return value, nil
 }
 
-// Set はキーに対する値の設定
+// Set はキーに対する値の設定。
 func (s *MapStore[K, V]) Set(ctx context.Context, key K, value V) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -65,7 +65,7 @@ func (s *MapStore[K, V]) Set(ctx context.Context, key K, value V) error {
 	return nil
 }
 
-// Delete はキーと対応する値の削除
+// Delete はキーと対応する値の削除。
 func (s *MapStore[K, V]) Delete(ctx context.Context, key K) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -74,7 +74,7 @@ func (s *MapStore[K, V]) Delete(ctx context.Context, key K) error {
 	return nil
 }
 
-// List は全ての値の取得
+// List は全ての値の取得。
 func (s *MapStore[K, V]) List(ctx context.Context) ([]V, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
@@ -87,7 +87,7 @@ func (s *MapStore[K, V]) List(ctx context.Context) ([]V, error) {
 	return values, nil
 }
 
-// Has はキーの存在確認
+// Has はキーの存在確認。
 func (s *MapStore[K, V]) Has(ctx context.Context, key K) bool {
 	s.mu.RLock()
 	defer s.mu.RUnlock()

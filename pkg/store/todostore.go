@@ -20,12 +20,12 @@ import (
 	"github.com/takekazu/planny/pkg/x/store/mapstore"
 )
 
-// TodoStore はTodoアイテムを管理するためのインターフェース
+// TodoStore はTodoアイテムを管理するためのインターフェース。
 type TodoStore interface {
 	store.Store[string, *todov1.Todo]
 }
 
-// store はTodoStoreの実装
+// store はTodoStoreの実装。
 type todoStore struct {
 	// 構造体埋め込みによりKeyValueStoreの実装を継承
 	store.Store[string, *todov1.Todo]
@@ -33,7 +33,7 @@ type todoStore struct {
 
 var _ store.Store[string, *todov1.Todo] = (*todoStore)(nil)
 
-// New は新しいTodoStoreのインスタンスを作成
+// New は新しいTodoStoreのインスタンスを作成。
 func New() TodoStore {
 	return &todoStore{
 		Store: mapstore.New[string, *todov1.Todo](),

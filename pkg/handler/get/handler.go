@@ -12,28 +12,27 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package delete
+package get
 
 import (
 	"context"
+	"errors"
 	"fmt"
-	"time"
 
 	"connectrpc.com/connect"
 	todov1 "github.com/takekazu/planny/pkg/gen/planny/todo/v1"
-	"github.com/takekazu/planny/pkg/todo/store"
-	"google.golang.org/protobuf/types/known/timestamppb"
+	"github.com/takekazu/planny/pkg/store"
 )
 
-// Handler は指定されたリソース名のTodoアイテムを削除します
+// Handler は指定されたリソース名のTodoアイテムを取得します。
 func Handler(
 	ctx context.Context,
-	store store.TodoStore,
-	req *connect.Request[todov1.DeleteTodoRequest],
-) (*connect.Response[todov1.DeleteTodoResponse], error) {
+	store store.TodoStore, // TodoStore型を使用
+	req *connect.Request[todov1.GetTodoRequest],
+) (*connect.Response[todov1.GetTodoResponse], error) {
 	// 入力検証
 	if req.Msg == nil {
-		return nil, connect.NewError(connect.CodeInvalidArgument, fmt.Errorf("request message is nil"))
+		return nil, connect.NewError(connect.CodeInvalidArgument, errors.New("request message is nil"))
 	}
 
 	// リソース名からTodoアイテムを取得
@@ -43,19 +42,8 @@ func Handler(
 			fmt.Errorf("todo with name %q not found", req.Msg.Name))
 	}
 
-	// 既に削除済みかチェック
-	// TODO: AIPを確認
-	if todo.DeletedAt != nil {
-		return nil, connect.NewError(connect.CodeFailedPrecondition,
-			fmt.Errorf("todo %q is already deleted", req.Msg.Name))
-	}
-
-	// 論理削除: 削除日時を設定
-	todo.DeletedAt = timestamppb.New(time.Now())
-	todo.Status = todov1.TodoStatus_TODO_STATUS_REVOKED
-
 	// レスポンスの作成
-	return connect.NewResponse(&todov1.DeleteTodoResponse{
+	return connect.NewResponse(&todov1.GetTodoResponse{
 		Todo: todo,
 	}), nil
 }

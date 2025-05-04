@@ -182,8 +182,7 @@ func TestCreateTodo(t *testing.T) {
 	})
 }
 
-// StartTodoServer は、 Todo service のhttptest.Serverを起動し
-// sever と shutdown 関数を返す
+// StartTodoServer は、 Todo service のhttptest.Serverを起動し server と shutdown 関数を返す。
 func StartTodoServer() (*httptest.Server, func()) {
 	mux := http.NewServeMux()
 	mux.Handle(todov1connect.NewTodoServiceHandler(

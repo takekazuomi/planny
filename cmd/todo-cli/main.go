@@ -53,7 +53,7 @@ func main() {
 			}))
 
 	if err != nil {
-		// TodoErrorInfo をすべて抽出
+		// TodoErrorInfo をすべて抽出。
 		todoInfos := ExtractDetails[*todov1.TodoErrorInfo](err)
 		if len(todoInfos) > 0 {
 			log.Printf("Extracted %d TodoErrorInfo details:", len(todoInfos))
@@ -62,8 +62,8 @@ func main() {
 			}
 		}
 
-		// 元のエラーメッセージも出力して終了
-		log.Fatalf("Create failed: %v", err)
+		// 元のエラーメッセージも出力して終了。
+		log.Fatalf("Create failed: %v", err) //nolint:gocritic
 	}
 	log.Printf("Create response: %v", response)
 }
@@ -75,10 +75,10 @@ func main() {
 // https://connectrpc.com/docs/go/errors/#error-details
 func ExtractDetails[T proto.Message](err error) []T {
 	var connectErr *connect.Error
-	var results []T // 結果を格納するスライス
+	var results []T // 結果を格納するスライス。
 
 	if !errors.As(err, &connectErr) {
-		return results // connect.Error ではない
+		return results // connect.Error ではない。
 	}
 
 	details := connectErr.Details()
@@ -87,12 +87,12 @@ func ExtractDetails[T proto.Message](err error) []T {
 	for _, detail := range details {
 		msg, valueErr := detail.Value()
 		if valueErr != nil {
-			// 詳細のアンパックに失敗した場合、次の詳細へ
+			// 詳細のアンパックに失敗した場合、次の詳細へ。
 			continue
 		}
 
 		if typedMsg, ok := msg.(T); ok {
-			results = append(results, typedMsg) // 型が一致したらスライスに追加
+			results = append(results, typedMsg) // 型が一致したらスライスに追加。
 		}
 	}
 

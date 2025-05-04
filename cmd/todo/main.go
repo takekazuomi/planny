@@ -29,7 +29,7 @@ import (
 	"connectrpc.com/grpcreflect"
 
 	"github.com/takekazu/planny/pkg/gen/planny/todo/v1/todov1connect"
-	"github.com/takekazu/planny/pkg/todo/server"
+	"github.com/takekazu/planny/pkg/server"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 )

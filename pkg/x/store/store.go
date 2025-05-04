@@ -18,20 +18,20 @@ import (
 	"context"
 )
 
-// Store は汎用的なKey-Valueデータストアのインターフェースを定義します
+// Store は汎用的なKey-Valueデータストアのインターフェースを定義。
 type Store[K comparable, V any] interface {
-	// Get はキーに対応する値を取得します
+	// Get はキーに対応する値を取得します。
 	Get(ctx context.Context, key K) (V, error)
 
-	// Set はキーに対して値を設定します
+	// Set はキーに対して値を設定します。
 	Set(ctx context.Context, key K, value V) error
 
-	// Delete はキーと対応する値を削除します
+	// Delete はキーと対応する値を削除します。
 	Delete(ctx context.Context, key K) error
 
-	// List は全ての値を取得します
+	// List は全ての値を取得します。
 	List(ctx context.Context) ([]V, error)
 
-	// Has はキーが存在するか確認します
+	// Has はキーが存在するか確認します。
 	Has(ctx context.Context, key K) bool
 }

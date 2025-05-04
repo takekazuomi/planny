@@ -29,6 +29,7 @@ linters:
     #- revive            # 追加
     #- exhaustruct       # 追加
     #- testifylint       # 追加
+    - gosmopolitan      # 日本語リテラルを許可
 
   settings:
     errcheck:
