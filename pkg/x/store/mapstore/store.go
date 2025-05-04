@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package: mapstore は、KeyValueStore のin-memory generic map実装。
+// Package mapstore は、KeyValueStore のin-memory generic map実装。
 package mapstore
 
 import (
@@ -43,7 +43,7 @@ func New[K comparable, V any]() *MapStore[K, V] {
 }
 
 // Get はキーに対応する値の取得。
-func (s *MapStore[K, V]) Get(ctx context.Context, key K) (V, error) {
+func (s *MapStore[K, V]) Get(_ context.Context, key K) (V, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
@@ -57,7 +57,7 @@ func (s *MapStore[K, V]) Get(ctx context.Context, key K) (V, error) {
 }
 
 // Set はキーに対する値の設定。
-func (s *MapStore[K, V]) Set(ctx context.Context, key K, value V) error {
+func (s *MapStore[K, V]) Set(_ context.Context, key K, value V) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -66,7 +66,7 @@ func (s *MapStore[K, V]) Set(ctx context.Context, key K, value V) error {
 }
 
 // Delete はキーと対応する値の削除。
-func (s *MapStore[K, V]) Delete(ctx context.Context, key K) error {
+func (s *MapStore[K, V]) Delete(_ context.Context, key K) error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -75,7 +75,7 @@ func (s *MapStore[K, V]) Delete(ctx context.Context, key K) error {
 }
 
 // List は全ての値の取得。
-func (s *MapStore[K, V]) List(ctx context.Context) ([]V, error) {
+func (s *MapStore[K, V]) List(_ context.Context) ([]V, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
@@ -88,7 +88,7 @@ func (s *MapStore[K, V]) List(ctx context.Context) ([]V, error) {
 }
 
 // Has はキーの存在確認。
-func (s *MapStore[K, V]) Has(ctx context.Context, key K) bool {
+func (s *MapStore[K, V]) Has(_ context.Context, key K) bool {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 

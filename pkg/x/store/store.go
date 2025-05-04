@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Package store は汎用的なKey-Valueデータストアのインターフェースを提供します。
 package store
 
 import (

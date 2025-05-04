@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Package main はTodoサービスのクライアントコマンドラインツール
 package main
 
 import (
@@ -28,7 +29,6 @@ import (
 )
 
 func main() {
-
 	conn := &http.Client{
 		Timeout: 15 * time.Second,
 		// Transport は通常、http.DefaultTransport を基に設定されますが、

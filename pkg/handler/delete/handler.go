@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-package delete
+// Package delete は Todo アイテムを削除する機能を提供します
+package delete //nolint:predeclared
 
 import (
 	"context"
@@ -46,7 +47,7 @@ func Handler(
 
 	// 既に削除済みかチェック
 	// TODO: AIPを確認
-	if todo.DeletedAt != nil {
+	if todo.GetDeletedAt() != nil {
 		return nil, connect.NewError(connect.CodeFailedPrecondition,
 			fmt.Errorf("todo %q is already deleted", req.Msg.GetName()))
 	}

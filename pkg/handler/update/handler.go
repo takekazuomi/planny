@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Package update は Todo アイテムを更新する機能を提供します
 package update
 
 import (
@@ -38,22 +39,22 @@ func Handler(
 	}
 
 	// リソース名からTodoアイテムを取得
-	todo, err := store.Get(ctx, req.Msg.Name)
+	todo, err := store.Get(ctx, req.Msg.GetName())
 	if err != nil {
 		return nil, connect.NewError(connect.CodeNotFound,
-			fmt.Errorf("todo with name %q not found", req.Msg.Name))
+			fmt.Errorf("todo with name %q not found", req.Msg.GetName()))
 	}
 
 	// 削除されたアイテムは更新できない
-	if todo.DeletedAt != nil {
+	if todo.GetDeletedAt() != nil {
 		return nil, connect.NewError(connect.CodeFailedPrecondition,
-			fmt.Errorf("cannot update deleted todo %q", req.Msg.Name))
+			fmt.Errorf("cannot update deleted todo %q", req.Msg.GetName()))
 	}
 
 	// フィールドを更新
 	// TODO: パーシャルアップデート
-	todo.Title = req.Msg.Title
-	todo.Description = req.Msg.Description
+	todo.Title = req.Msg.GetTitle()
+	todo.Description = req.Msg.GetDescription()
 	todo.UpdatedAt = timestamppb.New(time.Now())
 
 	// レスポンスの作成

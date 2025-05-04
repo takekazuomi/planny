@@ -76,11 +76,11 @@ func TestCreateTodo(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			resp, err := client.CreateTodo(context.Background(), connect.NewRequest(tt.req))
+	for _, testCase := range tests {
+		t.Run(testCase.name, func(t *testing.T) {
+			resp, err := client.CreateTodo(context.Background(), connect.NewRequest(testCase.req))
 
-			if tt.wantErr {
+			if testCase.wantErr {
 				require.Error(t, err)
 				return
 			}
@@ -88,38 +88,38 @@ func TestCreateTodo(t *testing.T) {
 			require.NoError(t, err)
 			require.NotNil(t, resp)
 			require.NotNil(t, resp.Msg)
-			require.NotNil(t, resp.Msg.Todo)
+			require.NotNil(t, resp.Msg.GetTodo())
 
-			todo := resp.Msg.Todo
+			todo := resp.Msg.GetTodo()
 
 			// 各フィールドが適切に設定されていることを検証
-			if tt.checkFields {
-				assert.NotEmpty(t, todo.Name, "Todoの名前が設定されていること")
-				assert.Equal(t, tt.req.Title, todo.Title, "タイトルが設定されていること")
-				assert.Equal(t, tt.req.Description, todo.Description, "説明が設定されていること")
-				assert.Equal(t, todov1.TodoStatus_TODO_STATUS_ACTIVE, todo.Status, "ステータスがアクティブに設定されていること")
-				assert.NotNil(t, todo.CreatedAt, "作成日時が設定されていること")
-				assert.NotNil(t, todo.UpdatedAt, "更新日時が設定されていること")
-				assert.Nil(t, todo.DeletedAt, "削除日時が設定されていないこと")
-				assert.Equal(t, int32(0), todo.Priority, "優先度がデフォルト値に設定されていること")
-				assert.NotNil(t, todo.DueDate, "期限日が初期化されていること")
+			if testCase.checkFields {
+				assert.NotEmpty(t, todo.GetName(), "Todoの名前が設定されていること")
+				assert.Equal(t, testCase.req.GetTitle(), todo.GetTitle(), "タイトルが設定されていること")
+				assert.Equal(t, testCase.req.GetDescription(), todo.GetDescription(), "説明が設定されていること")
+				assert.Equal(t, todov1.TodoStatus_TODO_STATUS_ACTIVE, todo.GetStatus(), "ステータスがアクティブに設定されていること")
+				assert.NotNil(t, todo.GetCreatedAt(), "作成日時が設定されていること")
+				assert.NotNil(t, todo.GetUpdatedAt(), "更新日時が設定されていること")
+				assert.Nil(t, todo.GetDeletedAt(), "削除日時が設定されていないこと")
+				assert.Equal(t, int32(0), todo.GetPriority(), "優先度がデフォルト値に設定されていること")
+				assert.NotNil(t, todo.GetDueDate(), "期限日が初期化されていること")
 			}
 
 			// 作成したTodoをGetTodoで取得できることを検証
-			if tt.checkGet {
+			if testCase.checkGet {
 				getResp, err := client.GetTodo(context.Background(), connect.NewRequest(&todov1.GetTodoRequest{
-					Name: todo.Name,
+					Name: todo.GetName(),
 				}))
 
 				require.NoError(t, err)
 				require.NotNil(t, getResp)
 				require.NotNil(t, getResp.Msg)
-				require.NotNil(t, getResp.Msg.Todo)
+				require.NotNil(t, getResp.Msg.GetTodo())
 
-				getTodo := getResp.Msg.Todo
-				assert.Equal(t, todo.Name, getTodo.Name, "取得したTodoの名前が一致すること")
-				assert.Equal(t, todo.Title, getTodo.Title, "取得したTodoのタイトルが一致すること")
-				assert.Equal(t, todo.Description, getTodo.Description, "取得したTodoの説明が一致すること")
+				getTodo := getResp.Msg.GetTodo()
+				assert.Equal(t, todo.GetName(), getTodo.GetName(), "取得したTodoの名前が一致すること")
+				assert.Equal(t, todo.GetTitle(), getTodo.GetTitle(), "取得したTodoのタイトルが一致すること")
+				assert.Equal(t, todo.GetDescription(), getTodo.GetDescription(), "取得したTodoの説明が一致すること")
 			}
 		})
 	}
@@ -138,23 +138,23 @@ func TestCreateTodo(t *testing.T) {
 		// 複数のTodoを作成
 		todos := make([]*todov1.Todo, 0, len(todoTests))
 
-		for _, tt := range todoTests {
+		for _, todoTest := range todoTests {
 			req := &todov1.CreateTodoRequest{
-				Title:       tt.title,
-				Description: tt.description,
+				Title:       todoTest.title,
+				Description: todoTest.description,
 			}
 
 			resp, err := client.CreateTodo(context.Background(), connect.NewRequest(req))
 			require.NoError(t, err)
 			require.NotNil(t, resp)
 			require.NotNil(t, resp.Msg)
-			require.NotNil(t, resp.Msg.Todo)
+			require.NotNil(t, resp.Msg.GetTodo())
 
-			todos = append(todos, resp.Msg.Todo)
+			todos = append(todos, resp.Msg.GetTodo())
 
 			// 各Todoに対して個別の検証
-			assert.Equal(t, tt.title, resp.Msg.Todo.Title)
-			assert.Equal(t, tt.description, resp.Msg.Todo.Description)
+			assert.Equal(t, todoTest.title, resp.Msg.GetTodo().GetTitle())
+			assert.Equal(t, todoTest.description, resp.Msg.GetTodo().GetDescription())
 		}
 
 		// ListTodosを呼び出して、作成したTodoが含まれていることを確認
@@ -169,15 +169,15 @@ func TestCreateTodo(t *testing.T) {
 		// 各作成したTodoがリストに含まれていることを確認
 		for _, createdTodo := range todos {
 			found := false
-			for _, listedTodo := range listResp.Msg.Todos {
-				if listedTodo.Name == createdTodo.Name {
+			for _, listedTodo := range listResp.Msg.GetTodos() {
+				if listedTodo.GetName() == createdTodo.GetName() {
 					found = true
-					assert.Equal(t, createdTodo.Title, listedTodo.Title)
-					assert.Equal(t, createdTodo.Description, listedTodo.Description)
+					assert.Equal(t, createdTodo.GetTitle(), listedTodo.GetTitle())
+					assert.Equal(t, createdTodo.GetDescription(), listedTodo.GetDescription())
 					break
 				}
 			}
-			assert.True(t, found, "作成したTodo %s がリストに含まれていること", createdTodo.Name)
+			assert.True(t, found, "作成したTodo %s がリストに含まれていること", createdTodo.GetName())
 		}
 	})
 }

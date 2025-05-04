@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package todo はTodoサービスを実装するパッケージです。
+// Package server はTodoサービスを実装するパッケージです。
 // TodoServiceHandlerインターフェースを実装し、Todoアイテムの管理機能を提供します。
 package server
 

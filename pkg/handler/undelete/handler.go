@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Package undelete は削除された Todo アイテムを復元する機能を提供します
 package undelete
 
 import (
@@ -38,16 +39,16 @@ func Handler(
 	}
 
 	// リソース名からTodoアイテムを取得
-	todo, err := store.Get(ctx, req.Msg.Name)
+	todo, err := store.Get(ctx, req.Msg.GetName())
 	if err != nil {
 		return nil, connect.NewError(connect.CodeNotFound,
-			fmt.Errorf("todo with name %q not found", req.Msg.Name))
+			fmt.Errorf("todo with name %q not found", req.Msg.GetName()))
 	}
 
 	// 削除されていない場合はエラー
-	if todo.DeletedAt == nil {
+	if todo.GetDeletedAt() == nil {
 		return nil, connect.NewError(connect.CodeFailedPrecondition,
-			fmt.Errorf("todo %q is not deleted", req.Msg.Name))
+			fmt.Errorf("todo %q is not deleted", req.Msg.GetName()))
 	}
 
 	// 削除フラグをクリア

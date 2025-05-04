@@ -35,9 +35,7 @@ import (
 )
 
 func main() {
-
 	ctx := context.Background()
-
 	mux := http.NewServeMux()
 	mux.Handle(todov1connect.NewTodoServiceHandler(
 		server.NewTodoServer(),

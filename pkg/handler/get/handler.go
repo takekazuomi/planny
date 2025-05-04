@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Package get は Todo アイテムを取得する機能を提供します
 package get
 
 import (
@@ -36,10 +37,10 @@ func Handler(
 	}
 
 	// リソース名からTodoアイテムを取得
-	todo, err := store.Get(ctx, req.Msg.Name)
+	todo, err := store.Get(ctx, req.Msg.GetName())
 	if err != nil {
 		return nil, connect.NewError(connect.CodeNotFound,
-			fmt.Errorf("todo with name %q not found", req.Msg.Name))
+			fmt.Errorf("todo with name %q not found", req.Msg.GetName()))
 	}
 
 	// レスポンスの作成
