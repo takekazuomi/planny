@@ -21,7 +21,7 @@ import (
 	"github.com/takekazuomi/planny/pkg/cmd"
 )
 
-var log = results.Must1(logger.NewName("planny-cli"))
+var log = results.Must1(logger.NewName("planny-cli")) //nolint:unused,gochecknoglobals
 
 func main() {
 	cmd.Execute()

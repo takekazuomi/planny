@@ -26,7 +26,7 @@ import (
 	xslog "github.com/takekazuomi/planny/pkg/x/slog"
 )
 
-// NewSlogInterceptor は、リクエストとレスポンスをログに記録するインターセプターを作成
+// NewSlogInterceptor は、リクエストとレスポンスをログに記録するインターセプターを作成。
 func NewSlogInterceptor(logger *slog.Logger) connect.UnaryInterceptorFunc {
 	return func(next connect.UnaryFunc) connect.UnaryFunc {
 		return func(ctx context.Context, req connect.AnyRequest) (connect.AnyResponse, error) {
@@ -57,7 +57,7 @@ func NewSlogInterceptor(logger *slog.Logger) connect.UnaryInterceptorFunc {
 	}
 }
 
-// TestJSONMarshal はオブジェクトがJSONマーシャリング可能か検証します
+// TestJSONMarshal はオブジェクトがJSONマーシャリング可能か検証。
 func TestJSONMarshal(obj any, name string) {
 	_, err := json.Marshal(obj)
 	if err != nil {

@@ -1,8 +1,12 @@
 {
     "go.lintTool": "golangci-lint",
+    "go.lintOnSave": "workspace",
     "go.lintFlags": [
       "--config=${workspaceFolder}/.golangci.yml",
-      "--fast"
-    ]
+      "--fast-only"
+    ],
+    "go.alternateTools": {
+      "golangci-lint": "${workspaceFolder}/.tmp/bin/golangci-lint"
+    }    
   }
 

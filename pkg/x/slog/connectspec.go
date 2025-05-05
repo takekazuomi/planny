@@ -23,8 +23,8 @@ import (
 )
 
 // MethodDescriptorToMap は protoreflect.MethodDescriptor の重要な情報を
-// サイクル参照を回避して安全にマップに変換
-func MethodDescriptorToMap(md protoreflect.MethodDescriptor) map[string]interface{} {
+// サイクル参照を回避して安全にマップに変換。
+func MethodDescriptorToMap(md protoreflect.MethodDescriptor) map[string]interface{} { //nolint:cyclop,varnamelen
 	if md == nil {
 		return nil
 	}
@@ -71,12 +71,12 @@ func MethodDescriptorToMap(md protoreflect.MethodDescriptor) map[string]interfac
 	return result
 }
 
-// MethodDescriptor は protoreflect.MethodDescriptor を slog.Attr として安全に返却
+// MethodDescriptor は protoreflect.MethodDescriptor を slog.Attr として安全に返却。
 func MethodDescriptor(name string, md protoreflect.MethodDescriptor) slog.Attr {
 	return slog.Any(name, MethodDescriptorToMap(md))
 }
 
-// ConnectSpecSchema は connect.Spec.Schema から安全に MethodDescriptor を抽出
+// ConnectSpecSchema は connect.Spec.Schema から安全に MethodDescriptor を抽出。
 func ConnectSpecSchema(name string, schema any) slog.Attr {
 	if schema == nil {
 		return slog.Any(name, nil)
@@ -91,7 +91,7 @@ func ConnectSpecSchema(name string, schema any) slog.Attr {
 	return slog.String(name+"_type", fmt.Sprintf("%T", schema))
 }
 
-// ConnectSpec は connect.Spec から情報を抽出して返却
+// ConnectSpec は connect.Spec から情報を抽出して返却。
 func ConnectSpec(name string, spec connect.Spec) slog.Attr {
 	// マップに変換して安全に扱う
 	result := map[string]interface{}{

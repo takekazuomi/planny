@@ -42,6 +42,7 @@
         "funcorder",
         "funlen",
         "ginkgolinter",
+        "goaux",
         "GOBIN",
         "gocheckcompilerdirectives",
         "gochecknoglobals",

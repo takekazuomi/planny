@@ -22,8 +22,9 @@ import (
 	"google.golang.org/protobuf/proto"
 )
 
-func ProtoMessage(name string, m proto.Message) slog.Attr {
-	if m == nil {
+// ProtoMessage は、proto.Message を slog.Attr 形式に変換。
+func ProtoMessage(name string, msg proto.Message) slog.Attr {
+	if msg == nil {
 		return slog.Any(name, nil)
 	}
 
@@ -33,10 +34,10 @@ func ProtoMessage(name string, m proto.Message) slog.Attr {
 		EmitUnpopulated: false, // 値が設定されていないフィールドは出力しない
 	}
 
-	jsonBytes, err := marshaler.Marshal(m)
+	jsonBytes, err := marshaler.Marshal(msg)
 	if err != nil {
 		// 変換に失敗した場合はそのままのメッセージを返す
-		return slog.Any(name, m)
+		return slog.Any(name, msg)
 	}
 
 	// JSON バイト列をマップに変換して返す（きれいなログ出力のため）

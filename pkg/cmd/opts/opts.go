@@ -12,12 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Package opts は、コマンドラインオプションを定義。
 package opts
 
 var (
-	ApiEndpoint = "http://localhost:51051"
-	Title       = ""
+	// APIEndpoint は、APIエンドポイントのURL。
+	APIEndpoint = "http://localhost:51051"
+	// Title は、TODOのタイトル。
+	Title = ""
+	// Description は、TODOの説明。
 	Description = ""
-	DueDate     = ""
-	Priority    = 0
+	// DueDate は、TODOの予定。
+	DueDate = ""
+	// Priority は、TODOの優先度。
+	Priority int32
 )

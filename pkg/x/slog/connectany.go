@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Package slog は、slogパッケージの拡張
 package slog
 
 import (
@@ -22,7 +23,7 @@ import (
 	"connectrpc.com/connect"
 )
 
-// ConnectAnyRequest は connect.AnyRequest から情報を抽出して返却
+// ConnectAnyRequest は connect.AnyRequest から情報を抽出して返却。
 func ConnectAnyRequest(name string, req connect.AnyRequest) slog.Attr {
 	attrs := []any{}
 
@@ -58,7 +59,7 @@ func ConnectAnyRequest(name string, req connect.AnyRequest) slog.Attr {
 	return slog.Group(name, attrs...)
 }
 
-// ConnectAnyResponse は connect.AnyResponse から情報を抽出して返却
+// ConnectAnyResponse は connect.AnyResponse から情報を抽出して返却。
 func ConnectAnyResponse(name string, resp connect.AnyResponse) slog.Attr {
 	attrs := []any{}
 
@@ -81,9 +82,9 @@ func ConnectAnyResponse(name string, resp connect.AnyResponse) slog.Attr {
 	return slog.Group(name, attrs...)
 }
 
-// extractHeaders はhttp.Headerからマップを作成して返します
+// extractHeaders はhttp.Headerからマップを作成して返却。
 func extractHeaders(header http.Header) map[string][]string {
-	if header == nil || len(header) == 0 {
+	if len(header) == 0 {
 		return nil
 	}
 

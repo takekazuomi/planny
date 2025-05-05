@@ -35,15 +35,15 @@ func DateToTime(d *date.Date) (time.Time, error) {
 	if d == nil {
 		return time.Time{}, nil
 	}
-	return time.Date(int(d.Year), time.Month(d.Month), int(d.Day), 0, 0, 0, 0, time.Local), nil
+	return time.Date(int(d.GetYear()), time.Month(d.GetMonth()), int(d.GetDay()), 0, 0, 0, 0, time.Local), nil
 }
 
 // TimeToDate は、time.Time を date.Date に変換。
 func TimeToDate(t time.Time) *date.Date {
 	return &date.Date{
-		Year:  int32(t.Year()),
-		Month: int32(t.Month()),
-		Day:   int32(t.Day()),
+		Year:  int32(t.Year()),  //nolint:gosec
+		Month: int32(t.Month()), //nolint:gosec
+		Day:   int32(t.Day()),   //nolint:gosec
 	}
 }
 
@@ -52,7 +52,7 @@ func DateToTimestamp(d *date.Date) *timestamppb.Timestamp {
 	if d == nil {
 		return nil
 	}
-	return timestamppb.New(time.Date(int(d.Year), time.Month(d.Month), int(d.Day), 0, 0, 0, 0, time.Local))
+	return timestamppb.New(time.Date(int(d.GetYear()), time.Month(d.GetMonth()), int(d.GetDay()), 0, 0, 0, 0, time.Local))
 }
 
 // TimestampToDate は、timestamppb.Timestamp を date.Date に変換。
@@ -62,8 +62,8 @@ func TimestampToDate(ts *timestamppb.Timestamp) *date.Date {
 	}
 	t := ts.AsTime()
 	return &date.Date{
-		Year:  int32(t.Year()),
-		Month: int32(t.Month()),
-		Day:   int32(t.Day()),
+		Year:  int32(t.Year()),  //nolint:gosec
+		Month: int32(t.Month()), //nolint:gosec
+		Day:   int32(t.Day()),   //nolint:gosec
 	}
 }

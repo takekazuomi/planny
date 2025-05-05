@@ -38,7 +38,7 @@ import (
 	"golang.org/x/net/http2/h2c"
 )
 
-var log = results.Must1(logger.NewName("planny"))
+var log = results.Must1(logger.NewName("planny")) //nolint:gochecknoglobals
 
 func main() {
 	ctx := context.Background()

@@ -25,7 +25,7 @@ import (
 
 var log = results.Must1(logger.New())
 
-// rootCmd represents the base command when called without any subcommands
+// rootCmd represents the base command when called without any subcommands.
 var rootCmd = &cobra.Command{
 	Use:   "planny-cli",
 	Short: "todo の cli",
@@ -41,5 +41,5 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringVarP(&opts.ApiEndpoint, "api-endpoint", "e", opts.ApiEndpoint, "API endpoint url")
+	rootCmd.PersistentFlags().StringVarP(&opts.APIEndpoint, "api-endpoint", "e", opts.APIEndpoint, "API endpoint url")
 }

@@ -33,7 +33,7 @@ import (
 	"github.com/takekazuomi/planny/pkg/store"
 )
 
-var log = results.Must1(logger.New())
+var log = results.Must1(logger.New()) //nolint:unused,gochecknoglobals
 
 type todoServer struct {
 	Store store.TodoStore

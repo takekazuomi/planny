@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Package client は、planny のクライアントを提供するパッケージ。
 package client
 
 import (
@@ -25,27 +26,27 @@ const (
 	userAgent = "planny-client/v1.0.0"
 )
 
-// userAgentTransport は、HTTPリクエストにUser-Agentヘッダーを追加するためのTransport
+// userAgentTransport は、HTTPリクエストにUser-Agentヘッダーを追加するためのTransport。
 type userAgentTransport struct {
 	base      http.RoundTripper
 	userAgent string
 }
 
-// RoundTrip は、HTTPリクエストを送信する際にUser-Agentヘッダーを追加
+// RoundTrip は、HTTPリクエストを送信する際にUser-Agentヘッダーを追加。
 func (t *userAgentTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	req.Header.Set("user-agent", t.userAgent)
+	req.Header.Set("User-Agent", t.userAgent)
 	return t.base.RoundTrip(req)
 }
 
-// httpClient は、共通のHTTPクライアント
-var httpClient = &http.Client{
+// httpClient は、共通のHTTPクライアント。
+var httpClient = &http.Client{ //nolint:gochecknoglobals
 	Transport: &userAgentTransport{
 		base:      http.DefaultTransport,
 		userAgent: userAgent,
 	},
 }
 
-// NewTodoClient は TodoServiceClient を作成
+// NewTodoClient は TodoServiceClient を作成。
 func NewTodoClient(baseURL string, opts ...connect.ClientOption) todov1connect.TodoServiceClient {
 	// http client は、http.DefaultClient を使用
 	return todov1connect.NewTodoServiceClient(

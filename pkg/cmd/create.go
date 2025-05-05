@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// Package cmd は、コマンドラインインターフェースを提供するパッケージ。
 package cmd
 
 import (
@@ -27,7 +28,7 @@ import (
 	"github.com/takekazuomi/planny/pkg/x/protoconv"
 )
 
-// createCmd represents the create command
+// createCmd represents the create command.
 var createCmd = &cobra.Command{
 	Use:   "create",
 	Short: "A brief description of your command",
@@ -51,14 +52,14 @@ func init() {
 	opts.DueDate = time.Now().Add(30 * 24 * time.Hour).Format("2006-01-02")
 	flags.StringVarP(&opts.DueDate, "due-date", "D", opts.DueDate, "Todo due date. Format: YYYY-MM-DD")
 
-	flags.IntVarP(&opts.Priority, "priority", "p", 0, "Todo priority")
+	flags.Int32VarP(&opts.Priority, "priority", "p", 0, "Todo priority")
 }
 
-func run(cmd *cobra.Command, args []string) error {
+func run(cmd *cobra.Command, _ []string) error {
 	ctx := cmd.Context()
 	log = log.With(slog.String("cmd", "create"))
 
-	client := client.NewTodoClient(opts.ApiEndpoint, connect.WithGRPC())
+	client := client.NewTodoClient(opts.APIEndpoint, connect.WithGRPC())
 
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
@@ -77,7 +78,7 @@ func run(cmd *cobra.Command, args []string) error {
 				Title:       opts.Title,
 				Description: opts.Description,
 				DueDate:     dueDate,
-				Priority:    int32(opts.Priority),
+				Priority:    opts.Priority,
 			}))
 
 	if err != nil {

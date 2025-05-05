@@ -15,7 +15,6 @@
 package server
 
 import (
-	"context"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -78,7 +77,7 @@ func TestCreateTodo(t *testing.T) {
 
 	for _, testCase := range tests {
 		t.Run(testCase.name, func(t *testing.T) {
-			resp, err := client.CreateTodo(context.Background(), connect.NewRequest(testCase.req))
+			resp, err := client.CreateTodo(t.Context(), connect.NewRequest(testCase.req))
 
 			if testCase.wantErr {
 				require.Error(t, err)
@@ -107,7 +106,7 @@ func TestCreateTodo(t *testing.T) {
 
 			// 作成したTodoをGetTodoで取得できることを検証
 			if testCase.checkGet {
-				getResp, err := client.GetTodo(context.Background(), connect.NewRequest(&todov1.GetTodoRequest{
+				getResp, err := client.GetTodo(t.Context(), connect.NewRequest(&todov1.GetTodoRequest{
 					Name: todo.GetName(),
 				}))
 
@@ -144,7 +143,7 @@ func TestCreateTodo(t *testing.T) {
 				Description: todoTest.description,
 			}
 
-			resp, err := client.CreateTodo(context.Background(), connect.NewRequest(req))
+			resp, err := client.CreateTodo(t.Context(), connect.NewRequest(req))
 			require.NoError(t, err)
 			require.NotNil(t, resp)
 			require.NotNil(t, resp.Msg)
@@ -158,7 +157,7 @@ func TestCreateTodo(t *testing.T) {
 		}
 
 		// ListTodosを呼び出して、作成したTodoが含まれていることを確認
-		listResp, err := client.ListTodos(context.Background(), connect.NewRequest(&todov1.ListTodosRequest{
+		listResp, err := client.ListTodos(t.Context(), connect.NewRequest(&todov1.ListTodosRequest{
 			ShowDeleted: false,
 		}))
 

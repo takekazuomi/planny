@@ -30,6 +30,7 @@ linters:
     #- exhaustruct       # 追加
     #- testifylint       # 追加
     - gosmopolitan      # 日本語リテラルを許可
+    - gochecknoinits    # check that no inits functions are present in Go code.
 
   settings:
     errcheck:
@@ -56,8 +57,8 @@ linters:
     rules:
       # It's much more convenient to keep eliza's matching and response data as
       # globals rather than config.
-      #- linters: [gochecknoglobals]
-      #  path: internal/eliza/globals.go
+      - linters: [gochecknoglobals]
+        path: pkg/cmd/.+\.go$
       # Don't ban use of fmt.Errorf to create new errors, but the remaining
       # checks from err113 are useful.
       - path: '(.+)\.go$'
@@ -73,3 +74,8 @@ formatters:
         - default # Default section: contains all imports that could not be matched to another section type.
         - prefix(grpc-errors) # Custom section: groups all imports with the specified Prefix.
 
+output:
+  formats:
+    text:
+      print-issued-lines: true
+      print-linter-name: true
