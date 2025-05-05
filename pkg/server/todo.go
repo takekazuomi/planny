@@ -20,16 +20,20 @@ import (
 	"context"
 
 	"connectrpc.com/connect"
-	todov1 "github.com/takekazu/planny/pkg/gen/planny/todo/v1"
-	"github.com/takekazu/planny/pkg/gen/planny/todo/v1/todov1connect"
-	"github.com/takekazu/planny/pkg/handler/create"
-	"github.com/takekazu/planny/pkg/handler/delete"
-	"github.com/takekazu/planny/pkg/handler/get"
-	"github.com/takekazu/planny/pkg/handler/list"
-	"github.com/takekazu/planny/pkg/handler/undelete"
-	"github.com/takekazu/planny/pkg/handler/update"
-	"github.com/takekazu/planny/pkg/store"
+	"github.com/goaux/results"
+	"github.com/goaux/slog/logger"
+	todov1 "github.com/takekazuomi/planny/pkg/gen/planny/todo/v1"
+	"github.com/takekazuomi/planny/pkg/gen/planny/todo/v1/todov1connect"
+	"github.com/takekazuomi/planny/pkg/handler/create"
+	"github.com/takekazuomi/planny/pkg/handler/delete"
+	"github.com/takekazuomi/planny/pkg/handler/get"
+	"github.com/takekazuomi/planny/pkg/handler/list"
+	"github.com/takekazuomi/planny/pkg/handler/undelete"
+	"github.com/takekazuomi/planny/pkg/handler/update"
+	"github.com/takekazuomi/planny/pkg/store"
 )
+
+var log = results.Must1(logger.New())
 
 type todoServer struct {
 	Store store.TodoStore

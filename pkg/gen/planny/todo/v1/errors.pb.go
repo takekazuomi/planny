@@ -158,8 +158,8 @@ const file_planny_todo_v1_errors_proto_rawDesc = "" +
 	"\adetails\x18\x03 \x01(\tR\adetails*H\n" +
 	"\tTodoError\x12\x1a\n" +
 	"\x16TODO_ERROR_UNSPECIFIED\x10\x00\x12\x1f\n" +
-	"\x1bTODO_ERROR_MAX_TASK_REACHED\x10\x01B\xb5\x01\n" +
-	"\x12com.planny.todo.v1B\vErrorsProtoP\x01Z8github.com/takekazu/planny/pkg/gen/planny/todo/v1;todov1\xa2\x02\x03PTX\xaa\x02\x0ePlanny.Todo.V1\xca\x02\x0ePlanny\\Todo\\V1\xe2\x02\x1aPlanny\\Todo\\V1\\GPBMetadata\xea\x02\x10Planny::Todo::V1b\x06proto3"
+	"\x1bTODO_ERROR_MAX_TASK_REACHED\x10\x01B\xb8\x01\n" +
+	"\x12com.planny.todo.v1B\vErrorsProtoP\x01Z;github.com/takekazuomi/planny/pkg/gen/planny/todo/v1;todov1\xa2\x02\x03PTX\xaa\x02\x0ePlanny.Todo.V1\xca\x02\x0ePlanny\\Todo\\V1\xe2\x02\x1aPlanny\\Todo\\V1\\GPBMetadata\xea\x02\x10Planny::Todo::V1b\x06proto3"
 
 var (
 	file_planny_todo_v1_errors_proto_rawDescOnce sync.Once

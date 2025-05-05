@@ -23,8 +23,8 @@ import (
 	"connectrpc.com/connect"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	todov1 "github.com/takekazu/planny/pkg/gen/planny/todo/v1"
-	"github.com/takekazu/planny/pkg/gen/planny/todo/v1/todov1connect"
+	todov1 "github.com/takekazuomi/planny/pkg/gen/planny/todo/v1"
+	"github.com/takekazuomi/planny/pkg/gen/planny/todo/v1/todov1connect"
 )
 
 func TestCreateTodo(t *testing.T) {

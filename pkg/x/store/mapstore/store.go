@@ -20,7 +20,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/takekazu/planny/pkg/x/store"
+	"github.com/takekazuomi/planny/pkg/x/store"
 )
 
 // MapStore はKeyValueStoreインターフェースを実装する、メモリ内のmapベースストア。

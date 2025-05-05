@@ -23,8 +23,9 @@ import (
 
 	"connectrpc.com/connect"
 	"github.com/oklog/ulid/v2"
-	todov1 "github.com/takekazu/planny/pkg/gen/planny/todo/v1"
-	"github.com/takekazu/planny/pkg/store"
+	todov1 "github.com/takekazuomi/planny/pkg/gen/planny/todo/v1"
+	"github.com/takekazuomi/planny/pkg/store"
+	"google.golang.org/genproto/googleapis/type/date"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
@@ -39,7 +40,12 @@ func Handler(
 	nowProto := timestamppb.New(now)
 
 	// 30日後
-	dueDate := timestamppb.New(now.Add(30 * 24 * time.Hour))
+	dueTime := now.Add(30 * 24 * time.Hour)
+	dueDate := &date.Date{
+		Year:  int32(dueTime.Year()),
+		Month: int32(dueTime.Month()),
+		Day:   int32(dueTime.Day()),
+	}
 
 	// Todo リソース名の生成
 	name := "todos/" + strings.ToLower(ulid.Make().String())

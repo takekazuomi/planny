@@ -12,17 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package main はTodoサービスのクライアントコマンドラインツール
-package main
+package opts
 
-import (
-	"github.com/goaux/results"
-	"github.com/goaux/slog/logger"
-	"github.com/takekazuomi/planny/pkg/cmd"
+var (
+	ApiEndpoint = "http://localhost:51051"
+	Title       = ""
+	Description = ""
+	DueDate     = ""
+	Priority    = 0
 )
-
-var log = results.Must1(logger.NewName("planny-cli"))
-
-func main() {
-	cmd.Execute()
-}

@@ -2,7 +2,10 @@ version: v1
 managed:
   enabled: true
   go_package_prefix:
-    default: github.com/takekazu/planny/pkg/gen
+    default: github.com/takekazuomi/planny/pkg/gen
+    except:
+      - buf.build/googleapis/googleapis
+      - buf.build/google/type
 plugins:
   - name: go
     out: pkg/gen

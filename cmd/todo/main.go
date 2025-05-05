@@ -18,39 +18,50 @@ package main
 import (
 	"context"
 	"errors"
-	"log"
+	"log/slog"
 	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 	"time"
 
+	"connectrpc.com/connect"
 	"connectrpc.com/grpchealth"
 	"connectrpc.com/grpcreflect"
 
-	"github.com/takekazu/planny/pkg/gen/planny/todo/v1/todov1connect"
-	"github.com/takekazu/planny/pkg/server"
+	"github.com/goaux/results"
+	"github.com/goaux/slog/logger"
+	"github.com/takekazuomi/planny/pkg/gen/planny/todo/v1/todov1connect"
+	"github.com/takekazuomi/planny/pkg/server"
+	"github.com/takekazuomi/planny/pkg/x/interceptor"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 )
 
+var log = results.Must1(logger.NewName("planny"))
+
 func main() {
 	ctx := context.Background()
 	mux := http.NewServeMux()
+
 	mux.Handle(todov1connect.NewTodoServiceHandler(
 		server.NewTodoServer(),
+		connect.WithInterceptors(interceptor.NewSlogInterceptor(log)),
 	))
+
 	mux.Handle(grpchealth.NewHandler(
 		grpchealth.NewStaticChecker(todov1connect.TodoServiceName),
 	))
+
 	mux.Handle(grpcreflect.NewHandlerV1(
 		grpcreflect.NewStaticReflector(todov1connect.TodoServiceName),
 	))
+
 	mux.Handle(grpcreflect.NewHandlerV1Alpha(
 		grpcreflect.NewStaticReflector(todov1connect.TodoServiceName),
 	))
 
-	addr := "localhost:8080"
+	addr := "localhost:51051"
 	if port := os.Getenv("PORT"); port != "" {
 		addr = ":" + port
 	}
@@ -70,7 +81,8 @@ func main() {
 	signal.Notify(signals, os.Interrupt, syscall.SIGTERM)
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-			log.Fatalf("HTTP listen and serve: %v", err)
+			log.ErrorContext(ctx, "HTTP listen and serve", slog.Any("error", err))
+			os.Exit(1)
 		}
 	}()
 
@@ -79,6 +91,6 @@ func main() {
 	ctx, cancel := context.WithTimeout(ctx, time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
-		log.Fatalf("HTTP shutdown: %v", err) //nolint:gocritic
+		log.ErrorContext(ctx, "HTTP shutdown", slog.Any("error", err))
 	}
 }

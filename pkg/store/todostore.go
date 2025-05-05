@@ -15,9 +15,9 @@
 package store
 
 import (
-	todov1 "github.com/takekazu/planny/pkg/gen/planny/todo/v1"
-	"github.com/takekazu/planny/pkg/x/store"
-	"github.com/takekazu/planny/pkg/x/store/mapstore"
+	todov1 "github.com/takekazuomi/planny/pkg/gen/planny/todo/v1"
+	"github.com/takekazuomi/planny/pkg/x/store"
+	"github.com/takekazuomi/planny/pkg/x/store/mapstore"
 )
 
 // TodoStore はTodoアイテムを管理するためのインターフェース。

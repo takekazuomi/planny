@@ -22,8 +22,8 @@ import (
 	"time"
 
 	"connectrpc.com/connect"
-	todov1 "github.com/takekazu/planny/pkg/gen/planny/todo/v1"
-	"github.com/takekazu/planny/pkg/store"
+	todov1 "github.com/takekazuomi/planny/pkg/gen/planny/todo/v1"
+	"github.com/takekazuomi/planny/pkg/store"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
