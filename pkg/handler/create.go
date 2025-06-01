@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package create は Todo アイテムを作成する機能を提供します
-package create
+// Package handler は Todo アイテムのハンドラを提供。
+package handler
 
 import (
 	"context"
@@ -29,8 +29,8 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-// Handler は新しいTodoアイテムを作成します。
-func Handler(
+// CreateTodo は新しいTodoアイテムを作成します。
+func CreateTodo(
 	ctx context.Context,
 	store store.TodoStore,
 	req *connect.Request[todov1.CreateTodoRequest],

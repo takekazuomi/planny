@@ -41,6 +41,7 @@
         "forcetypeassert",
         "funcorder",
         "funlen",
+        "genproto",
         "ginkgolinter",
         "goaux",
         "GOBIN",

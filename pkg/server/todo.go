@@ -24,7 +24,7 @@ import (
 	"github.com/goaux/slog/logger"
 	todov1 "github.com/takekazuomi/planny/pkg/gen/planny/todo/v1"
 	"github.com/takekazuomi/planny/pkg/gen/planny/todo/v1/todov1connect"
-	"github.com/takekazuomi/planny/pkg/handler/create"
+	"github.com/takekazuomi/planny/pkg/handler"
 	"github.com/takekazuomi/planny/pkg/handler/delete"
 	"github.com/takekazuomi/planny/pkg/handler/get"
 	"github.com/takekazuomi/planny/pkg/handler/list"
@@ -42,8 +42,8 @@ type todoServer struct {
 var _ todov1connect.TodoServiceHandler = &todoServer{}
 
 // NewTodoServer は新しいTodoServiceHandlerを作成。
-// このハンドラーはTodoアイテムの作成、取得、更新、削除、復元などの操作を提供する。
-// ConnectフレームワークでTodoサービスを使用するためのエントリーポイントとして使用される。
+// このハンドラーはTodoアイテムの作成、取得、更新、削除、復元などの操作を提供。
+// ConnectフレームワークでTodoサービスを使用するためのエントリーポイントとして使用。
 func NewTodoServer() todov1connect.TodoServiceHandler {
 	return &todoServer{
 		Store: store.New(),
@@ -64,7 +64,7 @@ func callHandler[Req any, Resp any](
 func (s *todoServer) CreateTodo(
 	ctx context.Context, req *connect.Request[todov1.CreateTodoRequest],
 ) (*connect.Response[todov1.CreateTodoResponse], error) {
-	return callHandler(ctx, s.Store, req, create.Handler)
+	return callHandler(ctx, s.Store, req, handler.CreateTodo)
 }
 
 // GetTodo は指定されたリソース名のTodoアイテムを取得。
